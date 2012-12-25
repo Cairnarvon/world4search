@@ -81,6 +81,9 @@ body.main {
     padding-left: 1em;
     margin-top: 1em;
 }
+.spoiler {
+    background-color: black;
+}
 .noresults {
     padding-left: 120px;
     background: url('/static/sad-penguin.png') no-repeat left top;
