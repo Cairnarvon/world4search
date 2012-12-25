@@ -14,31 +14,41 @@ If you want to deploy your own search engine, here's more or less what you do:
 
 * Clone the repository.
 
-> `$ git clone git://github.com/Cairnarvon/world4search.git`
+```
+$ git clone git://github.com/Cairnarvon/world4search.git
+```
 
 * Install the dependencies.
 
-    $ pip install requests whoosh bottle mako
+```
+$ pip install requests whoosh bottle mako
+```
 
 * Edit `world4search.conf` and move it to `/etc/world4search.conf`.
 
 * Run the spider once for every board you want to index.
 
-    $ spider/spider.py sjis
-    [world4search] spider: created new index sjis in /var/www/index.
-    [world4search] spider: 13689 posts indexed from sjis.
-    $ spider/spider.py book
-    [world4search] spider: created new index book in /home/w4s/index.
-    [world4search] spider: 24699 posts indexed from book.
+```
+$ spider/spider.py sjis
+[world4search] spider: created new index sjis in /var/www/index.
+[world4search] spider: 13689 posts indexed from sjis.
+$ spider/spider.py book
+[world4search] spider: created new index book in /home/w4s/index.
+[world4search] spider: 24699 posts indexed from book.
+```
 
 * Set up chron jobs to run the spider automatically.
 
-    $ vim spider/crontab
-    $ crontab < spider/crontab
+```
+$ vim spider/crontab
+$ crontab < spider/crontab
+```
 
 * Deploy the web service somehow.
 
-    $ uwsgi --http :80 --wsgi-file web/world4search.py
+```
+$ uwsgi --http :80 --wsgi-file web/world4search.py
+```
 
 * Periodically check logs to ensure good functioning, probably in `/var/log/user.log` (depending on your syslogd).
 
