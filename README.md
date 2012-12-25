@@ -33,11 +33,11 @@ $ spider/spider.py sjis
 [world4search] spider: created new index sjis in /var/www/index.
 [world4search] spider: 13689 posts indexed from sjis.
 $ spider/spider.py book
-[world4search] spider: created new index book in /home/w4s/index.
+[world4search] spider: created new index book in /var/www/index.
 [world4search] spider: 24699 posts indexed from book.
 ```
 
-* Set up chron jobs to run the spider automatically.
+* Set up cron jobs to run the spider automatically.
 
 ```
 $ vim spider/crontab
