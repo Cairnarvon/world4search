@@ -1,0 +1,28 @@
+# Scraped every hour
+0   *           *   *   *   spider.py prog
+30  *           *   *   *   spider.py lounge
+
+# Scraped every 4 hours
+15  */4         *   *   *   spider.py vip
+
+# Scraped every 6 hours
+45  0,6,12,18   *   *   *   spider.py comp
+45  3,9,15,21   *   *   *   spider.py newpol
+
+# Scraped every 8 hours
+15  1,9,17      *   *   *   spider.py games
+15  2,10,18     *   *   *   spider.py sci
+15  3,11,19     *   *   *   spider.py anime
+
+# Scraped once a day
+45  1           *   *   *   spider.py lang
+45  2           *   *   *   spider.py img
+45  4           *   *   *   spider.py book
+15  5           *   *   *   spider.py music
+45  5           *   *   *   spider.py newnew
+15  6           *   *   *   spider.py tele
+15  7           *   *   *   spider.py tech
+45  7           *   *   *   spider.py sjis
+45  8           *   *   *   spider.py food
+45  10          *   *   *   spider.py sports
+45  11          *   *   *   spider.py carcom

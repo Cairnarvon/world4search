@@ -1,0 +1,125 @@
+body {
+    font-family: sans;
+    font-size: smaller;
+    margin: 0;
+}
+body.main {
+    text-align: center;
+}
+
+/* Header */
+#header {
+    margin: 0;
+    padding: 1em;
+    background-color: #fca;
+    border-bottom: 1px solid #eb9;
+}
+#logo {
+    vertical-align: middle;
+}
+#biglogo {
+    margin: 4em;
+}
+
+/* About */
+.about {
+    padding: 4em 6em;
+}
+.about > a {
+    display: block;
+    text-align: center;
+}
+.about > p {
+    margin-left: 2em;
+}
+.about p a {
+    color: #999;
+}
+.about p a:hover {
+    text-decoration: none;
+}
+
+/* Results */
+#results {
+    padding: 1em 4em;
+}
+#stats {
+    color: #999;
+}
+.result {
+    margin-top: 2em;
+    margin-bottom: 3em;
+}
+.title {
+    display: block;
+    color: red;
+    font-size: large;
+    text-decoration: none;
+    font-weight: normal;
+}
+.postnum {
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+    margin-right: .5em;
+}
+.author {
+    font-weight: bold;
+    color: green;
+}
+.date {
+}
+.body {
+    margin: 1em 4em;
+}
+.aa {
+    font-family: IPAMonaPGothic, Mona, 'MS PGothic', YOzFontAA97!important;
+}
+.quote {
+    display: block;
+    border-left: solid 2px #666;
+    padding-left: 1em;
+    margin-top: 1em;
+}
+.noresults {
+    padding-left: 120px;
+    background: url('/static/sad-penguin.png') no-repeat left top;
+    height: 200px;
+    display: table-cell;
+    vertical-align: middle;
+}
+#pagination {
+    text-align: center;
+}
+#pagination li {
+    display: inline;
+    font-size: large;
+}
+#pagination li a {
+    color: blue;
+}
+#pagination li a:hover {
+    text-decoration: none;
+}
+#pagination li .arrow {
+    text-decoration: none;
+}
+
+/* Footer */
+#footer {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    text-align: center;
+    width: 100%;
+    color: #999;
+}
+#footer a {
+    color: #999;
+}
+#footer a:hover {
+    text-decoration: none;
+}
+body.main #footer, body.about #footer {
+    position: fixed;
+    bottom: 0;
+}
