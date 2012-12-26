@@ -31,7 +31,8 @@ def dispatcher():
     if not query or not board:
         bottle.redirect('/')
     else:
-        bottle.redirect('/q/%s/%s' % (board, query))
+        bottle.redirect('/q/%s/%s' % (urllib.quote_plus(board),
+                                      urllib.quote_plus(query)))
 
 @bottle.route('/q/<board>/<query>')
 @bottle.route('/q/<board>/<query>/<page:int>')
@@ -73,7 +74,6 @@ def query(board, query, page=1):
 @bottle.route('/static/<filename>')
 def static(filename='favicon.ico'):
     return bottle.static_file(filename, root=config['static'])
-
 
 def read_config():
     config = {}
