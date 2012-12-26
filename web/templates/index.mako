@@ -22,6 +22,5 @@
     <a href="/about">About World4search</a> ::
     <a href="https://github.com/Cairnarvon/world4search">Code on Github</a>
 </div>
-</div>
 </body>
 </html>
