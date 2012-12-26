@@ -69,10 +69,13 @@ def query(board, query, page=1):
         board=board, query=query, page=page,
         results=results, hits=hits, time=dt
     )
-                                                        
+
+@bottle.route('/robots.txt')
 @bottle.route('/favicon.ico')
 @bottle.route('/static/<filename>')
-def static(filename='favicon.ico'):
+def static(filename=None):
+    if filename is None:
+        filename = bottle.request.path.lstrip('/')
     return bottle.static_file(filename, root=config['static'])
 
 def read_config():
