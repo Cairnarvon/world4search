@@ -38,7 +38,7 @@ def dispatcher():
 @bottle.route('/q/<board>/<query>/<page:int>')
 def query(board, query, page=1):
     if board not in config['boards']:
-        abort(404, 'Invalid board.')
+        bottle.abort(404, 'Invalid board.')
 
     dt = time.time()
 
