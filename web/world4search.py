@@ -26,8 +26,8 @@ def about():
 
 @bottle.post('/q')
 def dispatcher():
-    query = bottle.request.forms.query
-    board = bottle.request.forms.board
+    query = bottle.request.forms.query.encode('utf-8')
+    board = bottle.request.forms.board.encode('utf-8')
     if not query or not board:
         bottle.redirect('/')
     else:
@@ -60,9 +60,9 @@ def query(board, query, page=1):
 
     dt = time.time() - dt
 
-    syslog.syslog(syslog.LOG_INFO,
-                  'Query for "%s" on %s satisfied in %.2f seconds.' % \
-                  (query, board, dt)) 
+    log = u'Query for "%s" on %s satisfied in %.2f seconds.' % \
+          (query, board, dt)
+    syslog.syslog(syslog.LOG_INFO, log.encode('utf-8')) 
 
     return templates.get_template('results.mako').render(
         boards=config['boards'],
