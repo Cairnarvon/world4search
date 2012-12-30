@@ -26,8 +26,8 @@ def about():
 
 @bottle.post('/q')
 def dispatcher():
-    query = bottle.request.forms.query.encode('utf-8')
-    board = bottle.request.forms.board.encode('utf-8')
+    query = bottle.request.forms.query.replace('/', ' ').strip().encode('utf-8')
+    board = bottle.request.forms.board.replace('/', ' ').strip().encode('utf-8')
     if not query or not board:
         bottle.redirect('/')
     else:
