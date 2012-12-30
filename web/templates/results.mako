@@ -2,7 +2,7 @@
     from time import strftime, gmtime
 %>
 <!DOCTYPE html>
-<html>
+<html class="${board}">
 <head>
 <title>world4search</title>
 <link rel="stylesheet" href="/static/styles.css" type="text/css" />
