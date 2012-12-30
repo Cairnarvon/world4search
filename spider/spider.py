@@ -100,9 +100,8 @@ def subject_parse(sub):
             thread = thread.groupdict()
             ret[thread['id']] = dict((a, thread[a]) for a in thread)
         else:
-            syslog.syslog(syslog.LOG_NOTICE,
-                          "[%s] Can't parse: %s" % (config['board'],
-                                                    line.rstrip()))
+            log = u"[%s] Can't parse: %s" % (config['board'], line.rstrip())
+            syslog.syslog(syslog.LOG_NOTICE, log.encode('utf-8'))
     return ret
 
 def scrape():
