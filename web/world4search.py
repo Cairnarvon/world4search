@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import glob
+import os
 import re
 import sys
 import syslog
@@ -69,6 +71,42 @@ def query(board, query, page=1):
         board=board, query=query, page=page,
         results=results, hits=hits, time=dt
     )
+
+@bottle.route('/status')
+def status():
+    boards, totalsize = {}, 0
+
+    for board in config['boards']:
+        # Index size on disk
+        size = 0
+        for f in glob.glob(os.path.join(config['index'], '%s_*' % board)):
+            st = os.stat(f)
+            size += st.st_size
+
+        # Other information
+        try:
+            ix = whoosh.index.open_dir(config['index'], board)
+            num = ix.doc_count()
+            updated = ix.last_modified()
+            ix.close()
+        except whoosh.index.EmptyIndexError:
+            num = 0
+            updated = None
+
+        totalsize += size
+        boards[board] = {'size': size, 'num': num, 'updated': updated}
+
+    return templates.get_template('status.mako').render(
+        totalsize=totalsize, boards=boards
+    )
+
+@bottle.route('/status/<board>.subject.txt')
+def subjectdottxt(board):
+    if board in config['boards']:
+        return bottle.static_file('%s.subject.txt' % board,
+                                  root=config['index'])
+    else:
+        bottle.abort(404, 'Invalid board')
 
 @bottle.route('/robots.txt')
 @bottle.route('/favicon.ico')

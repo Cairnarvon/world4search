@@ -20,6 +20,7 @@
 <div id="footer">
     &#169; 2012, W4S Working Group ::
     <a href="/about">About World4search</a> ::
+    <a href="/status">Status</a> ::
     <a href="https://github.com/Cairnarvon/world4search">Code on Github</a>
 </div>
 </body>

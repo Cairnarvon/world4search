@@ -7,7 +7,7 @@ body {
     font-size: smaller;
     margin: 0;
 }
-body.main {
+body.main, body.status {
     text-align: center;
 }
 
@@ -40,6 +40,31 @@ body.main {
     color: #999;
 }
 .about p a:hover {
+    text-decoration: none;
+}
+
+/* Status */
+.stats {
+    border-collapse: collapse;
+    margin: 2em auto 4em;
+}
+.stats th, .stats td {
+    padding: 1em 2em;
+}
+.stats th {
+    border-bottom: 2px solid black;
+}
+.stats td {
+    border-bottom: 1px solid black;
+    text-align: right;
+}
+.stats td.board {
+    text-align: center;
+}
+.stats a {
+    color: blue;
+}
+.stats a:hover {
     text-decoration: none;
 }
 
