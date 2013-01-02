@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import argparse
 import json
 import os
 import sys
@@ -19,12 +20,12 @@ import whoosh.index
 CONFIG_FILE = '/etc/world4search.conf'
 
 
-def initialize_index(idir, iname):
+def initialize_index(idir, iname, redo=False):
     """Opens the index, creating it if needed."""
     if not os.path.exists(idir):
         os.mkdir(idir)
 
-    if not whoosh.index.exists_in(idir, iname):
+    if redo or not whoosh.index.exists_in(idir, iname):
         schema = whoosh.fields.Schema(
             url=whoosh.fields.STORED,
             subject=whoosh.fields.STORED,
@@ -167,29 +168,27 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Parse command line arguments
-    if len(sys.argv) == 2:
-        config['board'] = sys.argv[1]
-        if config['board'] not in config['boards']:
-            syslog.syslog(syslog.LOG_WARNING,
-                          '%s not in config.' % config['board'])
-    elif len(sys.argv) == 1:
-        syslog.syslog(syslog.LOG_ERR, 'Need board argument. Aborted.')
-        sys.exit(1)
-    else:
-        syslog.syslog(syslog.LOG_ERR,
-                      'Unrecognised options: ' + ' '.join(sys.argv[1:]))
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="world4search scraper")
+    parser.add_argument('board', help='board to index')
+    parser.add_argument('--redo', action='store_true',
+                        help='index whole board regardless of index state')
+    args = parser.parse_args()
+    if args.board not in config['boards']:
+        syslog.syslog(syslog.LOG_WARNING, '%s not in config.' % args.board)
+    config['board'] = args.board
 
     # Create or open index
-    ix = initialize_index(config['index'], config['board'])
+    ix = initialize_index(config['index'], config['board'], args.redo)
 
     # See which posts need fetching
-    try:
-        with open(os.path.join(config['index'],
-                               '%s.subject.txt' % config['board'])) as oldf:
-            old = oldf.read()
-    except IOError:
-        old = ''
+    old = ''
+    if not args.redo:
+        try:
+            with open(os.path.join(config['index'],
+                                   '%s.subject.txt' % config['board'])) as oldf:
+                old = oldf.read()
+        except IOError:
+            pass
 
     session = requests.session()
     try:

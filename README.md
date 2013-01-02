@@ -21,7 +21,7 @@ $ git clone git://github.com/Cairnarvon/world4search.git
 * Install the dependencies.
 
 ```
-$ pip install requests whoosh bottle mako
+$ pip install argparse requests whoosh bottle mako
 ```
 
 * Edit `world4search.conf` and move it to `/etc/world4search.conf`.
