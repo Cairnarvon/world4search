@@ -198,7 +198,7 @@ if __name__ == '__main__':
                           headers={'User-Agent': 'world4search/1.0'}).content
     except:
         syslog.syslog(syslog.LOG_ERR,
-                      "[%s] Can't access subject.txt.")
+                      "[%s] Can't access subject.txt." % config['board'])
         sys.exit(1)
 
     # Queue everything up
