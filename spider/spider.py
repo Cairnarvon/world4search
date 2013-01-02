@@ -27,7 +27,7 @@ def initialize_index(idir, iname, redo=False):
 
     if redo or not whoosh.index.exists_in(idir, iname):
         schema = whoosh.fields.Schema(
-            url=whoosh.fields.STORED,
+            url=whoosh.fields.ID(stored=True, unique=True),
             subject=whoosh.fields.STORED,
             post=whoosh.fields.STORED,
             author=whoosh.fields.STORED,
@@ -213,6 +213,7 @@ if __name__ == '__main__':
 
     # Accumulator loop
     ixwriter = ix.writer()
+    insert = ixwriter.add_document if args.redo else ixwriter.update_document
     n = 0
     while threading.activeCount() > 1 or not fetched.empty():
         try:
@@ -226,14 +227,15 @@ if __name__ == '__main__':
             post[u'now'] = 0
 
         url = os.path.join(config['url'], 'read',
-                           config['board'], str(post[u'thread']))
-        ixwriter.add_document(url=url,
-                              subject=post[u'subject'],
-                              post=int(post[u'post']),
-                              author=post[u'name'],
-                              time=post[u'now'],
-                              body=scrub(post[u'com']),
-                              html=expand_urls(post[u'com']))
+                           config['board'],
+                           str(post[u'thread'])).decode('utf-8')
+        insert(url=url,
+               subject=post[u'subject'],
+               post=int(post[u'post']),
+               author=post[u'name'],
+               time=post[u'now'],
+               body=scrub(post[u'com']),
+               html=expand_urls(post[u'com']))
         n += 1
 
     # Save everything
