@@ -120,8 +120,7 @@ def scrape():
             continue
 
         page = get(os.path.join(config['url'], 'json',
-                                config['board'], str(thread), '%d-' % posts),
-                   json=True)
+                                config['board'], str(thread), '%d-' % posts))
         if page is None:
             syslog.syslog(syslog.LOG_NOTICE,
                           "Can't access %s/%d." % (config['board'], thread))
@@ -133,16 +132,26 @@ def scrape():
             page[post][u'subject'] = subject
             fetched.put(page[post])
 
-def get(url, json=False):
+def subject_validate(response):
+    if re.match(r'^(?:.*?<>.*?<>.*?<>-?\d*<>\d*<>.*?<>-?\d*\n)+$',
+                response.content) is None:
+        raise ValueError('Malformed subject.txt')
+    return response.content
+
+def get(url, validate=lambda c: c.json()):
+    """
+    Fetches a URL and ensures the response looks right, retrying if not.
+    validate should be a callable that takes a requests.models.Response and
+    returns the content or raises a ValueError.
+    """
     global session
     for _ in range(config['retries']):
         try:
             page = session.get(
                 url,
-                stream=False,
                 headers={'User-Agent': 'world4search/1.0'}
             )
-            r = page.json() if json else page.content
+            r = validate(page)
         except (requests.exceptions.RequestException, ValueError):
             pass
         else:
@@ -199,7 +208,8 @@ if __name__ == '__main__':
             pass
 
     session = requests.session()
-    new = get(os.path.join(config['url'], config['board'], 'subject.txt'))
+    new = get(os.path.join(config['url'], config['board'], 'subject.txt'),
+              subject_validate)
     if new is None:
         syslog.syslog(syslog.LOG_ERR,
                       "[%s] Can't access subject.txt." % config['board'])
