@@ -12,13 +12,13 @@ def human_size(sz):
 def human_time(t):
     if t < 60:
         return '%d second%s' % (t, 's' if t != 1 else '')
-    t /= 60
+    t = round(t / 60.)
     if t < 60:
         return '%d minute%s' % (t, 's' if t != 1 else '')
-    t /= 60
+    t = round(t / 60.)
     if t < 24:
         return '%d hour%s' % (t, 's' if t != 1 else '')
-    t /= 24
+    t = round(t / 24.)
     return '%d day%s' % (t, 's' if t != 1 else '')
 
 locale.setlocale(locale.LC_ALL, '')
