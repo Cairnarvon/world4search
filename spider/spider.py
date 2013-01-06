@@ -119,18 +119,10 @@ def scrape():
         except:
             continue
 
-        for _ in range(config['retries']):
-            try:
-                page = session.get(
-                    os.path.join(config['url'], 'json',
-                                 config['board'], str(thread), '%d-' % posts),
-                    headers={'User-Agent': 'world4search/1.0'}
-                ).json()
-            except:
-                pass
-            else:
-                break
-        else:
+        page = get(os.path.join(config['url'], 'json',
+                                config['board'], str(thread), '%d-' % posts),
+                   json=True)
+        if page is None:
             syslog.syslog(syslog.LOG_NOTICE,
                           "Can't access %s/%d." % (config['board'], thread))
             continue
@@ -140,6 +132,22 @@ def scrape():
             page[post][u'thread'] = thread
             page[post][u'subject'] = subject
             fetched.put(page[post])
+
+def get(url, json=False):
+    global session
+    for _ in range(config['retries']):
+        try:
+            page = session.get(
+                url,
+                stream=False,
+                headers={'User-Agent': 'world4search/1.0'}
+            )
+            r = page.json() if json else page.content
+        except (requests.exceptions.RequestException, ValueError):
+            pass
+        else:
+            return r
+    return None
 
 
 if __name__ == '__main__':
@@ -191,12 +199,8 @@ if __name__ == '__main__':
             pass
 
     session = requests.session()
-    try:
-        new = session.get(os.path.join(config['url'],
-                                       config['board'],
-                                       'subject.txt'),
-                          headers={'User-Agent': 'world4search/1.0'}).content
-    except:
+    new = get(os.path.join(config['url'], config['board'], 'subject.txt'))
+    if new is None:
         syslog.syslog(syslog.LOG_ERR,
                       "[%s] Can't access subject.txt." % config['board'])
         sys.exit(1)
