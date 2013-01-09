@@ -73,7 +73,7 @@ def subject_diff(old, new):
     old = subject_parse(old)
     for thread in new:
         first = 1 if thread not in old else 1 + int(old[thread]['replies'])
-        last = new[thread]['replies']
+        last = int(new[thread]['replies'])
         yield int(thread), '%d-%d' % (first, last), new[thread]['subject']
 
 def subject_parse(sub):
