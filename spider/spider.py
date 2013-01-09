@@ -65,15 +65,16 @@ def expand_urls(html):
 
 def subject_diff(old, new):
     """
-    Yields (thread, first_post) for each entry changed between old and new
+    Yields (thread, post_range, title) for each entry changed between old and new
     subject.txt.
     """
     old = set(old.splitlines(True))
     new = subject_parse(set(new.splitlines(True)) - old)
     old = subject_parse(old)
     for thread in new:
-        replies = 1 if thread not in old else 1 + int(old[thread]['replies'])
-        yield int(thread), replies, new[thread]['subject']
+        first = 1 if thread not in old else 1 + int(old[thread]['replies'])
+        last = new[thread]['replies']
+        yield int(thread), '%d-%d' % (first, last), new[thread]['subject']
 
 def subject_parse(sub):
     """
@@ -120,7 +121,7 @@ def scrape():
             continue
 
         page = get(os.path.join(config['url'], 'json',
-                                config['board'], str(thread), '%d-' % posts))
+                                config['board'], str(thread), posts))
         if page is None:
             syslog.syslog(syslog.LOG_NOTICE,
                           "Can't access %s/%d." % (config['board'], thread))
