@@ -31,7 +31,7 @@
     <em>world4search</em> was written by <b>Xarn</b> and is maintained by the
     community. The code is available on
     <a href="https://github.com/Cairnarvon/world4search">Github</a> under the
-    GNU GPL license.
+    MIT License.
 </p>
 <p>
     This instance is maintained by
