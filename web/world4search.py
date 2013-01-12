@@ -2,6 +2,7 @@
 
 import glob
 import os
+import platform
 import re
 import sys
 import syslog
@@ -96,8 +97,13 @@ def status():
         totalsize += size
         boards[board] = {'size': size, 'num': num, 'updated': updated}
 
+    # Misc. information
+    statvfs = os.statvfs(config['index'])
+    freesize = statvfs.f_bavail * statvfs.f_bsize
+    uname = platform.uname()
+
     return templates.get_template('status.mako').render(
-        totalsize=totalsize, boards=boards
+        totalsize=totalsize, freesize=freesize, uname=uname, boards=boards
     )
 
 @bottle.route('/status/<board>.subject.txt')

@@ -31,7 +31,9 @@ locale.setlocale(locale.LC_ALL, '')
 </head>
 <body class="status">
 <a href="/"><img src="/static/logo.png" id="biglogo" alt="world4search" title="world4search" /></a>
+<p><strong>Server OS:</strong> ${uname[0]} ${uname[4]}</p>
 <p><strong>Total Index Size:</strong> ${human_size(totalsize)}</p>
+<p><strong>Free Disk Space:</strong> ${human_size(freesize)}</p>
 <table class="stats">
     <tr>
         <th>Board</th>
