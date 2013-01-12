@@ -46,7 +46,7 @@ def query(board, query, page=1):
 
     query = urllib.unquote_plus(query).decode('utf8', 'ignore')
     try:
-        ix = whoosh.index.open_dir(config['index'], indexname=board)
+        ix = whoosh.index.open_dir(config['index'], board, readonly=True)
         with ix.searcher() as searcher:
             # Parse query
             qparse = whoosh.qparser.QueryParser('body', ix.schema)
@@ -85,7 +85,7 @@ def status():
 
         # Other information
         try:
-            ix = whoosh.index.open_dir(config['index'], board)
+            ix = whoosh.index.open_dir(config['index'], board, readonly=True)
             num = ix.doc_count()
             updated = ix.last_modified()
             ix.close()
