@@ -98,8 +98,11 @@ def status():
         boards[board] = {'size': size, 'num': num, 'updated': updated}
 
     # Misc. information
-    statvfs = os.statvfs(config['index'])
-    freesize = statvfs.f_bavail * statvfs.f_bsize
+    try:
+        statvfs = os.statvfs(config['index'])
+        freesize = statvfs.f_bavail * statvfs.f_bsize
+    except AttributeError:
+        freesize = None
     uname = platform.uname()
     os_details = {
         'Linux': ('%s %s' % platform.linux_distribution()[:2]).capitalize(),

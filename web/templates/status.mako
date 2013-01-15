@@ -54,7 +54,11 @@ locale.setlocale(locale.LC_ALL, '')
 </table>
 
 <h1>Index</h1>
-<p><strong>Total Index Size:</strong> ${human_size(totalsize)} (${human_size(freesize)} free)</p>
+<p><strong>Total Index Size:</strong> ${human_size(totalsize)}
+% if freesize is not None:
+(${human_size(freesize)} free)
+% endif
+</p>
 <table class="stats">
     <tr>
         <th>Board</th>
