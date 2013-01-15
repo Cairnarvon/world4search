@@ -31,9 +31,30 @@ locale.setlocale(locale.LC_ALL, '')
 </head>
 <body class="status">
 <a href="/"><img src="/static/logo.png" id="biglogo" alt="world4search" title="world4search" /></a>
-<p><strong>Server OS:</strong> ${uname[0]} ${uname[4]}</p>
-<p><strong>Total Index Size:</strong> ${human_size(totalsize)}</p>
-<p><strong>Free Disk Space:</strong> ${human_size(freesize)}</p>
+<h1>Server</h1>
+<table class="server">
+<tr>
+    <td class="key">Hostname:</td>
+    <td>${uname[1]}</td>
+</tr>
+<tr>
+    <td class="key">Operating System:</td>
+    <td>${uname[0]} ${uname[4]} (${os_details})</td>
+</tr>
+<tr>
+    <td class="key">Local Time:</td>
+    <td>${strftime('%Y-%m-%d %H:%M %Z', gmtime())}</td>
+</tr>
+% if uptime is not None:
+<tr>
+    <td class="key">Uptime:</td>
+    <td>${human_time(uptime)}</td>
+</tr>
+% endif
+</table>
+
+<h1>Index</h1>
+<p><strong>Total Index Size:</strong> ${human_size(totalsize)} (${human_size(freesize)} free)</p>
 <table class="stats">
     <tr>
         <th>Board</th>

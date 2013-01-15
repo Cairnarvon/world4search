@@ -101,9 +101,23 @@ def status():
     statvfs = os.statvfs(config['index'])
     freesize = statvfs.f_bavail * statvfs.f_bsize
     uname = platform.uname()
+    os_details = {
+        'Linux': ('%s %s' % platform.linux_distribution()[:2]).capitalize(),
+        'FreeBSD': uname[2],
+        'Darwin': platform.mac_ver()[0],
+        'Windows': '%s %s' % platform.win32_ver()[0::2],
+    }.get(platform.system(), 'Unknown version')
+
+    try:
+        with open('/proc/uptime', 'r') as f:
+            uptime = float(f.readline().split()[0])
+    except (IOError, ValueError):
+        uptime = None
 
     return templates.get_template('status.mako').render(
-        totalsize=totalsize, freesize=freesize, uname=uname, boards=boards
+        uname=uname, os_details=os_details, uptime=uptime,
+        totalsize=totalsize, freesize=freesize,
+        boards=boards
     )
 
 @bottle.route('/status/<board>.subject.txt')

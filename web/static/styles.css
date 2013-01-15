@@ -44,9 +44,24 @@ body.main, body.status {
 }
 
 /* Status */
-.stats {
+.status h1 {
+    width: 60%;
+    margin: 2em auto 1em;
+    text-align: left;
+    border-bottom: 1px solid gray;
+    font-size: x-large;
+}
+.status table {
     border-collapse: collapse;
     margin: 2em auto 4em;
+}
+.server td {
+    text-align: left;
+    padding: .4em;
+}
+.server td.key {
+    text-align: right;
+    font-weight: bold;
 }
 .stats th, .stats td {
     padding: 1em 2em;
