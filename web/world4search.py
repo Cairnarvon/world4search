@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
 import glob
+import logging
 import os
 import platform
 import re
 import sys
-import syslog
 import time
 import urllib
 import ConfigParser
@@ -63,9 +63,8 @@ def query(board, query, page=1):
 
     dt = time.time() - dt
 
-    log = u'Query for "%s" on %s satisfied in %.2f seconds.' % \
-          (query, board, dt)
-    syslog.syslog(syslog.LOG_INFO, log.encode('utf-8')) 
+    logging.info(u'Query for "%s" on %s satisfied in %.2f seconds.',
+                 query, board, dt)
 
     return templates.get_template('results.mako').render(
         boards=config['boards'],
@@ -152,21 +151,21 @@ def read_config():
         config['static'] = cfg.get('web', 'static')
         config['cache'] = cfg.get('web', 'cache')
         config['index'] = cfg.get('global', 'index')
+        config['logfile'] = cfg.get('global', 'logfile')
     except IOError:
-        syslog.syslog(syslog.LOG_ERR,
-                      "Couldn't open configuration file. Aborted.")
+        print >>sys.stderr, "Couldn't open configuration file. Aborted."
         sys.exit(1)
     except ConfigParser.Error:
-        syslog.syslog(syslog.LOG_ERR,
-                      "Couldn't parse configuration file. Aborted.")
+        print >>sys.stderr, "Couldn't parse configuration file. Aborted."
         sys.exit(1)
 
     return config
 
-
-syslog.openlog('[world4search] web',
-               syslog.LOG_PERROR if sys.stderr.isatty() else 0)
 config = read_config()
+logging.basicConfig(
+    filename=config['logfile'], level=logging.INFO,
+    format="%(asctime)s [web]    %(levelname)-8s %(message)s"
+)
 templates = TemplateLookup(directories=[config['templates']],
                            module_directory=config['cache'])
 application = bottle.app()

@@ -2,9 +2,9 @@
 
 import argparse
 import json
+import logging
 import os
 import sys
-import syslog
 import re
 import threading
 import ConfigParser
@@ -36,7 +36,7 @@ def initialize_index(idir, iname, redo=False):
             html=whoosh.fields.STORED
         )
         ix = whoosh.index.create_in(idir, schema, indexname=iname)
-        syslog.syslog('created new index %s in %s.' % (iname, idir))
+        logging.info('Created new index %s in %s.', iname, idir)
     else:
         ix = whoosh.index.open_dir(idir, indexname=iname)
 
@@ -102,8 +102,8 @@ def subject_parse(sub):
             thread = thread.groupdict()
             ret[thread['id']] = dict((a, thread[a]) for a in thread)
         else:
-            log = u"[%s] Can't parse: %s" % (config['board'], line.rstrip())
-            syslog.syslog(syslog.LOG_NOTICE, log.encode('utf-8'))
+            logging.warning(u"[%s] Can't parse: %s",
+                            config['board'], line.rstrip())
     return ret
 
 def scrape():
@@ -123,8 +123,7 @@ def scrape():
         page = get(os.path.join(config['url'], 'json',
                                 config['board'], str(thread), posts))
         if page is None:
-            syslog.syslog(syslog.LOG_NOTICE,
-                          "Can't access %s/%d." % (config['board'], thread))
+            logging.error("Can't access %s/%d.", config['board'], thread)
             continue
 
         for post in page:
@@ -163,9 +162,6 @@ def get(url, validate=lambda c: c.json()):
 if __name__ == '__main__':
     global config, todo, fetched, session
 
-    syslog.openlog('[world4search] spider',
-                   syslog.LOG_PERROR if sys.stderr.isatty() else 0)
-
     # Parse config
     cfg = ConfigParser.ConfigParser()
     try:
@@ -176,14 +172,19 @@ if __name__ == '__main__':
         config['boards'] = dict(cfg.items('boards'))
         config['url'] = cfg.get('global', 'boards')
         config['retries'] = cfg.getint('spider', 'retries')
+        config['logfile'] = cfg.get('global', 'logfile')
     except IOError:
-        syslog.syslog(syslog.LOG_ERR,
-                      "Can't open configuration file. Aborted.")
+        print >>sys.stderr, "Can't open configuration file. Aborted."
         sys.exit(1)
     except (ConfigParser.Error, ValueError):
-        syslog.syslog(syslog.LOG_ERR,
-                      "Can't parse configuration file. Aborted.")
+        print >>sys.stderr, "Can't parse configuration file. Aborted."
         sys.exit(1)
+
+    # Logging
+    logging.basicConfig(
+        filename=config['logfile'], level=logging.INFO,
+        format="%(asctime)s [spider] %(levelname)-8s %(message)s"
+    )
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="world4search scraper")
@@ -192,7 +193,7 @@ if __name__ == '__main__':
                         help='index whole board regardless of index state')
     args = parser.parse_args()
     if args.board not in config['boards']:
-        syslog.syslog(syslog.LOG_WARNING, '%s not in config.' % args.board)
+        logging.warning('%s not in config.', args.board)
     config['board'] = args.board
 
     # Create or open index
@@ -212,8 +213,7 @@ if __name__ == '__main__':
     new = get(os.path.join(config['url'], config['board'], 'subject.txt'),
               subject_validate)
     if new is None:
-        syslog.syslog(syslog.LOG_ERR,
-                      "[%s] Can't access subject.txt." % config['board'])
+        logging.error("[%s] Can't access subject.txt.", config['board'])
         sys.exit(1)
 
     # Queue everything up
@@ -260,5 +260,4 @@ if __name__ == '__main__':
     ixwriter.commit()
 
     # Done
-    syslog.syslog(syslog.LOG_INFO,
-                  '%d posts indexed from %s.' % (n, config['board']))
+    logging.info('%d posts indexed from %s.', n, config['board'])
