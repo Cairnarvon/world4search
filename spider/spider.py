@@ -185,6 +185,7 @@ if __name__ == '__main__':
         filename=config['logfile'], level=logging.INFO,
         format="%(asctime)s [spider] %(levelname)-8s %(message)s"
     )
+    logging.getLogger('requests').setLevel(logging.ERROR)
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="world4search scraper")
