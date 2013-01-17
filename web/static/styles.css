@@ -44,6 +44,9 @@ body.main, body.status {
 }
 
 /* Status */
+.status #biglogo {
+    margin-bottom: 2em;
+}
 .status h1 {
     width: 60%;
     margin: 2em auto 1em;
