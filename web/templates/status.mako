@@ -3,7 +3,10 @@ import locale
 from time import time, strftime, gmtime
 
 def human_size(sz):
-    for s in 'bytes', 'KiB', 'MiB', 'GiB':
+    if sz < 1024:
+        return '%d bytes' % sz
+    sz /= 1024.
+    for s in 'KiB', 'MiB', 'GiB':
         if sz < 1024:
             return '%.2f %s' % (sz, s)
         sz /= 1024.
