@@ -1,1 +1,2 @@
-/home/w4s/.dotfiles/.gitignore
+*.py[co]
+*.local
