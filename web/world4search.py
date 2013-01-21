@@ -12,6 +12,7 @@ import ConfigParser
 
 import bottle
 from mako.lookup import TemplateLookup
+import uptime
 import whoosh.index
 import whoosh.qparser
 
@@ -110,14 +111,8 @@ def status():
         'Windows': '%s %s' % platform.win32_ver()[0::2],
     }.get(platform.system(), 'Unknown version')
 
-    try:
-        with open('/proc/uptime', 'r') as f:
-            uptime = float(f.readline().split()[0])
-    except (IOError, ValueError):
-        uptime = None
-
     return templates.get_template('status.mako').render(
-        uname=uname, os_details=os_details, uptime=uptime,
+        uname=uname, os_details=os_details, uptime=uptime.uptime(),
         totalsize=totalsize, freesize=freesize,
         boards=boards
     )

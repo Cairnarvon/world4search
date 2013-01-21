@@ -24,6 +24,26 @@ def human_time(t):
     t = round(t / 24.)
     return '%d day%s' % (t, 's' if t != 1 else '')
 
+def human_duration(t):
+    d = []
+
+    days, t = t // 86400, t % 86400
+    if days:
+        d.append('%d day%s' % (days, 's' if days != 1 else ''))
+
+    hours, t = t // 3600, t % 3600
+    if hours:
+        d.append('%d hour%s' % (hours, 's' if hours != 1 else ''))
+
+    minutes, t = t // 60, t % 60
+    if minutes:
+        d.append('%d minute%s' % (minutes, 's' if minutes != 1 else ''))
+
+    if t or not d:
+        d.append('%.2f second%s' % (t, 's' if t != 1 else ''))
+
+    return ', '.join(d)
+
 locale.setlocale(locale.LC_ALL, '')
 %>
 <!DOCTYPE html>
@@ -51,7 +71,7 @@ locale.setlocale(locale.LC_ALL, '')
 % if uptime is not None:
 <tr>
     <td class="key">Uptime:</td>
-    <td>${human_time(uptime)}</td>
+    <td>${human_duration(uptime)}</td>
 </tr>
 % endif
 </table>
