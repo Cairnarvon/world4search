@@ -1,6 +1,6 @@
 <%!
 import locale
-from time import time, strftime, gmtime
+from time import time, strftime, localtime
 
 def human_size(sz):
     if sz < 1024:
@@ -66,7 +66,7 @@ locale.setlocale(locale.LC_ALL, '')
 </tr>
 <tr>
     <td class="key">Local Time:</td>
-    <td>${strftime('%Y-%m-%d %H:%M %Z', gmtime())}</td>
+    <td>${strftime('%Y-%m-%d %H:%M %Z')}</td>
 </tr>
 % if uptime is not None:
 <tr>
@@ -96,7 +96,7 @@ locale.setlocale(locale.LC_ALL, '')
         <td>${human_size(boards[board]['size'])}</td>
         <td>${locale.format('%d', boards[board]['num'], grouping=True)}</td>
         <td>
-            <span title="${strftime('%Y-%m-%d %H:%M %Z', gmtime(boards[board]['updated']))}">
+            <span title="${strftime('%Y-%m-%d %H:%M %Z', localtime(boards[board]['updated']))}">
                 ${human_time(int(time() - boards[board]['updated']))} ago
             </span>
         </td>
