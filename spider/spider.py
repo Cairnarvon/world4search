@@ -250,7 +250,7 @@ if __name__ == '__main__':
                post=int(post[u'post']),
                author=post[u'name'],
                time=post[u'now'],
-               body=scrub(post[u'com']),
+               body=post[u'subject'] + u' ' + scrub(post[u'com']),
                html=expand_urls(post[u'com']))
         n += 1
 
